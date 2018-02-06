@@ -13,8 +13,10 @@
     
     @author Karl Cronburg <karl.cronburg@gmail.com>
 """
+import argparse
 import os
 import sys
+
 import pandas
 import numpy as np
 
@@ -341,10 +343,9 @@ def main(ctx):
         map(lambda f: f.close(), fps)
 
 
-if __name__ == '__main__':
-    import argparse
-    p = argparse.ArgumentParser()
-    arg = p.add_argument
+def build_argument_parser():
+    parser = argparse.ArgumentParser()
+    arg = parser.add_argument
     arg("FILE", help='space separated list of latency log filenames', nargs='+')
     arg('--buff_size',
         default=10000,
@@ -388,6 +389,16 @@ if __name__ == '__main__':
         help='Optional argument pointing to the job file used to create the '
              'given histogram files. Useful for auto-detecting --log_hist_msec and '
              '--log_unix_epoch (in fio) values.')
+    return parser
 
-    main(p.parse_args())
 
+def cli(argv=None):
+    parser = build_argument_parser()
+    if argv is None:
+        argv = sys.argv[1:]
+    ctx = parser.parse_args(argv)
+    main(ctx)
+
+
+if __name__ == '__main__':
+    cli()
