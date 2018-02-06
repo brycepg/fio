@@ -20,6 +20,11 @@ import numpy as np
 
 err = sys.stderr.write
 
+if sys.version_info >= (3, 0):
+    _map = map
+    map = lambda func, iterable: list(_map(func, iterable))
+
+
 def weighted_percentile(percs, vs, ws):
     """ Use linear interpolation to calculate the weighted percentile.
         
